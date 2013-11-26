@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sporthub.Tests", "Sporthub.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sporthub.Models", "Sporthub.Models\Sporthub.Models.csproj", "{7731002E-8723-4B50-8F16-FFF73E605CE8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sporthub.Scraper", "Sporthub.Scraper\Sporthub.Scraper.csproj", "{25B35DE8-9749-4B46-ABB3-499B2268F8D1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{7731002E-8723-4B50-8F16-FFF73E605CE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7731002E-8723-4B50-8F16-FFF73E605CE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7731002E-8723-4B50-8F16-FFF73E605CE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25B35DE8-9749-4B46-ABB3-499B2268F8D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25B35DE8-9749-4B46-ABB3-499B2268F8D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25B35DE8-9749-4B46-ABB3-499B2268F8D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25B35DE8-9749-4B46-ABB3-499B2268F8D1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
