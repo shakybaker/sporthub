@@ -5,6 +5,10 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sporthub.Web", "Sporthub.Web\Sporthub.Web.csproj", "{C186BA69-C938-4571-9E88-B32868465865}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sporthub.Tests", "Sporthub.Tests\Sporthub.Tests.csproj", "{9902F129-4CB5-471B-AA33-B4B066413522}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sporthub.Models", "Sporthub.Models\Sporthub.Models.csproj", "{7731002E-8723-4B50-8F16-FFF73E605CE8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{C186BA69-C938-4571-9E88-B32868465865}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C186BA69-C938-4571-9E88-B32868465865}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C186BA69-C938-4571-9E88-B32868465865}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9902F129-4CB5-471B-AA33-B4B066413522}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9902F129-4CB5-471B-AA33-B4B066413522}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9902F129-4CB5-471B-AA33-B4B066413522}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9902F129-4CB5-471B-AA33-B4B066413522}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7731002E-8723-4B50-8F16-FFF73E605CE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7731002E-8723-4B50-8F16-FFF73E605CE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7731002E-8723-4B50-8F16-FFF73E605CE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7731002E-8723-4B50-8F16-FFF73E605CE8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
