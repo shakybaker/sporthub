@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using Sporthub.Models.Entities;
+using Sporthub.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Spatial;
@@ -25,15 +25,15 @@ namespace Sporthub.Tests
             Assert.AreEqual("Chamonix", sut.Name);
         }
 
-        [Test]
-        public void Can_specify_a_resort_location()
-        {
-            var sut = new Resort();
-            sut.Location = DbGeography.FromText(string.Format("POINT ({0} {1})", longitude, latitude));
+        //[Test]
+        //public void Can_specify_a_resort_location()
+        //{
+        //    var sut = new Resort();
+        //    sut.Location = DbGeography.FromText(string.Format("POINT ({0} {1})", longitude, latitude));
 
-            Assert.AreEqual(longitude, sut.Location.Longitude);
-            Assert.AreEqual(latitude, sut.Location.Latitude);
-        }
+        //    Assert.AreEqual(longitude, sut.Location.Longitude);
+        //    Assert.AreEqual(latitude, sut.Location.Latitude);
+        //}
 
         [Test]
         public void Can_create_a_country()

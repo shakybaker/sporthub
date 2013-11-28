@@ -1,5 +1,5 @@
 ﻿using HtmlAgilityPack;
-using Sporthub.Models.Entities;
+using Sporthub.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +13,15 @@ namespace Sporthub.Scraper
     {
         static void Main(string[] args)
         {
+            using (var db = new SporthubContext())
+            {
+                foreach (var country in db.Countries)
+                {
+
+                }
+            }
+
+
             var resorts = new List<Resort>();
 
             var months = new string[] { "", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
@@ -195,8 +204,6 @@ namespace Sporthub.Scraper
                 //string tmp2 = Console.ReadLine();
 
                 var resort = new Resort();
-                resort.CountryId = 1;
-                resort.CountryName = "France";
                 resort.TrailsGreen = int.Parse(trailsGreen);
                 resort.TrailsBlue = int.Parse(trailsBlue);
                 resort.TrailsRed = int.Parse(trailsRed);

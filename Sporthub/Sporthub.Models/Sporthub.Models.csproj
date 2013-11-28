@@ -30,7 +30,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.0.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.0.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Xml.Linq" />
@@ -40,13 +47,41 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\Continent.cs" />
-    <Compile Include="Entities\Country.cs" />
-    <Compile Include="Entities\MountainRange.cs" />
-    <Compile Include="Entities\Resort.cs" />
-    <Compile Include="Entities\ResortArea.cs" />
-    <Compile Include="Interfaces\IEntity.cs" />
+    <Compile Include="Continent.cs" />
+    <Compile Include="Country.cs" />
+    <Compile Include="Migrations\201311281316083_InitialCreate.cs" />
+    <Compile Include="Migrations\201311281316083_InitialCreate.Designer.cs">
+      <DependentUpon>201311281316083_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201311281322526_RemovedCountryRefFromResort.cs" />
+    <Compile Include="Migrations\201311281322526_RemovedCountryRefFromResort.Designer.cs">
+      <DependentUpon>201311281322526_RemovedCountryRefFromResort.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201311281325503_AddCountryClass.cs" />
+    <Compile Include="Migrations\201311281325503_AddCountryClass.Designer.cs">
+      <DependentUpon>201311281325503_AddCountryClass.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="MountainRange.cs" />
+    <Compile Include="Resort.cs" />
+    <Compile Include="ResortArea.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SporthubContext.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201311281316083_InitialCreate.resx">
+      <DependentUpon>201311281316083_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201311281322526_RemovedCountryRefFromResort.resx">
+      <DependentUpon>201311281322526_RemovedCountryRefFromResort.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201311281325503_AddCountryClass.resx">
+      <DependentUpon>201311281325503_AddCountryClass.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
