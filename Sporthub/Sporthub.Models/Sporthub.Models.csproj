@@ -61,6 +61,14 @@
     <Compile Include="Migrations\201311281325503_AddCountryClass.Designer.cs">
       <DependentUpon>201311281325503_AddCountryClass.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201311281523168_AddDummyCountryIdToResort.cs" />
+    <Compile Include="Migrations\201311281523168_AddDummyCountryIdToResort.Designer.cs">
+      <DependentUpon>201311281523168_AddDummyCountryIdToResort.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201311281700032_AddNullableToResort.cs" />
+    <Compile Include="Migrations\201311281700032_AddNullableToResort.Designer.cs">
+      <DependentUpon>201311281700032_AddNullableToResort.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MountainRange.cs" />
     <Compile Include="Resort.cs" />
@@ -81,6 +89,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201311281325503_AddCountryClass.resx">
       <DependentUpon>201311281325503_AddCountryClass.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201311281523168_AddDummyCountryIdToResort.resx">
+      <DependentUpon>201311281523168_AddDummyCountryIdToResort.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201311281700032_AddNullableToResort.resx">
+      <DependentUpon>201311281700032_AddNullableToResort.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

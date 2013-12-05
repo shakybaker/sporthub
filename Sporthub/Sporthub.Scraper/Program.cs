@@ -17,53 +17,85 @@ namespace Sporthub.Scraper
             {
                 foreach (var country in db.Countries)
                 {
-
+                    var slug = (country.Name == "United Kingdom") ? "scotland" : country.Slug;
+                    var resorts = ScrapeResortsForCountry(slug, country.Id);
+                    foreach (var resort in resorts)
+                    {
+                        db.Resorts.Add(resort);
+                        Console.Write(string.Format("Saving country - {0} ...", resort.Name));
+                        db.SaveChanges();
+                        Console.WriteLine("DONE");
+                    }
                 }
             }
 
+            Console.WriteLine("FINISHED");
+            var tmp = Console.ReadLine();
 
+
+
+        }
+
+        private static List<Resort> ScrapeResortsForCountry(string slug, int countryId)
+        {
+            Console.WriteLine(string.Format("Scraping country - {0}", slug));
             var resorts = new List<Resort>();
 
             var months = new string[] { "", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
-            var days = new string[] { "","1st","2nd","3rd","4th","5th","6th","7th","8th","9th","10th","11th","12th","13th","14th","15th","16th","17th","18th","19th","20th","21st","22nd","23rd","24th","25th","26th","27th","28th","29th","30th","31st" };
+            var days = new string[] { "", "1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th", "11th", "12th", "13th", "14th", "15th", "16th", "17th", "18th", "19th", "20th", "21st", "22nd", "23rd", "24th", "25th", "26th", "27th", "28th", "29th", "30th", "31st" };
 
             HtmlNodeCollection cells = null;
-            string trailsGreen = string.Empty;
-            string trailsBlue = string.Empty;
-            string trailsRed = string.Empty;
-            string trailsBlack = string.Empty;
-            string liftsTotal = string.Empty;
-            string elevationFrom = string.Empty;
-            string elevationTo = string.Empty;
-            string verticalDrop = string.Empty;
+            int? trailsGreen = null;
+            int? trailsBlue = null;
+            int? trailsRed = null;
+            int? trailsBlack = null;
+            int? liftsTotal = null;
+            int? elevationFrom = null;
+            int? elevationTo = null;
+            int? verticalDrop = null;
+            int? liftTram = null;
+            int? liftFast8 = null;
+            int? liftFast6 = null;
+            int? liftFast4 = null;
+            int? liftQuad = null;
+            int? liftDouble = null;
+            int? liftSurface = null;
+            int? liftTriple = null;
+            int? runsLength = null;
+            int? terrainParks = null;
+            int? longestRun = null;
+            int? skiableTerrain = null;
+
+            
             string resortStatus = string.Empty;
             string seasonStart = string.Empty;
             string seasonEnd = string.Empty;
-            string liftTram = string.Empty;
-            string liftFast8= string.Empty;
-            string liftFast6 = string.Empty;
-            string liftFast4 = string.Empty;
-            string liftQuad = string.Empty;
-            string liftDouble = string.Empty;
-            string liftSurface = string.Empty;
-            string liftTriple = string.Empty;
-            string runsLength = string.Empty;
-            string terrainParks = string.Empty;
-            string longestRun = string.Empty;
-            string skiableTerrain = string.Empty;
             string touristAddress = string.Empty;
             string touristEmail = string.Empty;
             string akas = string.Empty;
+            string href = "";
 
             var htmlWeb = new HtmlWeb();
-            var resortsPage = htmlWeb.Load("http://www.onthesnow.co.uk/france/skireport.html?startRow=1&numRows=10000");
-            var links = resortsPage.DocumentNode.SelectNodes("//table[@id='resort_grid']/tbody/tr/td/div/div/a");
+            var resortsPage = htmlWeb.Load(string.Format("http://www.onthesnow.co.uk/{0}/skireport.html?startRow=1&numRows=10000", slug));
+            var links = resortsPage.DocumentNode.SelectNodes("//div[@class='name']/a");
 
-            foreach (var link in links)
+            int i = 0;
+            foreach (var link in links.Where(x => x.Attributes["href"].Value.EndsWith("skireport.html")))
             {
-                if (!link.Attributes["href"].Value.EndsWith("skireport.html"))
-                    continue;
-                var doc = htmlWeb.Load(link.Attributes["href"].Value);
+                href = string.Format("http://www.onthesnow.co.uk{0}", link.Attributes["href"].Value.Replace("skireport", "ski-resort"));
+
+                var doc = htmlWeb.Load(href);
+                //var x = doc.DocumentNode.SelectSingleNode("./span[@class='resort_name']");
+                var slugs = link.Attributes["href"].Value.Split('/');
+                var slugname = slugs[2];
+                var name = slugname;
+                i++;
+                //var name = "Resort " + i;
+                //var slugname = "";
+
+
+
+                Console.Write(string.Format("Scraping resort - {0} ...", name));
                 var rows = doc.DocumentNode.SelectNodes("//table[@class='ovv_info']/tr");
 
                 //resort & season status
@@ -83,9 +115,9 @@ namespace Sporthub.Scraper
                 //elevation
                 cells = rows[1].SelectNodes("./td");
                 var tmp = cells[0].InnerText.Replace(" ", string.Empty).Split('-');
-                elevationFrom = tmp[0].Replace("m", string.Empty);
-                elevationTo = tmp[1].Replace("m", string.Empty);
-                verticalDrop = (int.Parse(elevationTo) - int.Parse(elevationFrom)).ToString();
+                elevationFrom = int.Parse(tmp[0].Replace("m", string.Empty));
+                elevationTo = int.Parse(tmp[1].Replace("m", string.Empty));
+                verticalDrop = elevationTo - elevationFrom;
 
                 //runs
                 cells = rows[2].SelectNodes("./td");
@@ -97,16 +129,20 @@ namespace Sporthub.Scraper
 
                     if (className == "ovv_trails")
                     {
-                        trailsGreen = cell.SelectSingleNode("./span[@class='ovv_t t1']").InnerText.Replace("%", string.Empty);
-                        trailsBlue = cell.SelectSingleNode("./span[@class='ovv_t t2']").InnerText.Replace("%", string.Empty);
-                        trailsRed = cell.SelectSingleNode("./span[@class='ovv_t t3']").InnerText.Replace("%", string.Empty);
-                        trailsBlack = cell.SelectSingleNode("./span[@class='ovv_t t4']").InnerText.Replace("%", string.Empty);
+                        if (cell.SelectSingleNode("./span[@class='ovv_t t1']") != null)
+                            trailsGreen = int.Parse(cell.SelectSingleNode("./span[@class='ovv_t t1']").InnerText.Replace("%", string.Empty));
+                        if (cell.SelectSingleNode("./span[@class='ovv_t t2']") != null)
+                            trailsBlue = int.Parse(cell.SelectSingleNode("./span[@class='ovv_t t2']").InnerText.Replace("%", string.Empty));
+                        if (cell.SelectSingleNode("./span[@class='ovv_t t3']") != null)
+                            trailsRed = int.Parse(cell.SelectSingleNode("./span[@class='ovv_t t3']").InnerText.Replace("%", string.Empty));
+                        if (cell.SelectSingleNode("./span[@class='ovv_t t4']") != null)
+                            trailsBlack = int.Parse(cell.SelectSingleNode("./span[@class='ovv_t t4']").InnerText.Replace("%", string.Empty));
                     }
                 }
 
                 //elevation
                 cells = rows[3].SelectNodes("./td");
-                liftsTotal = cells[0].InnerText;
+                liftsTotal = int.Parse(cells[0].InnerText);
 
                 //lifts
                 var lis = doc.DocumentNode.SelectNodes("//div[@id='resort_lifts']/ul/li");
@@ -119,44 +155,58 @@ namespace Sporthub.Scraper
                     switch (className)
                     {
                         case "trams":
-                            liftTram = li.InnerText;
+                            liftTram = int.Parse(li.InnerText);
                             break;
                         case "fast_eight":
-                            liftFast8 = li.InnerText;
+                            liftFast8 = int.Parse(li.InnerText);
                             break;
                         case "fast_sixes":
-                            liftFast6 = li.InnerText;
+                            liftFast6 = int.Parse(li.InnerText);
                             break;
                         case "fast_quads":
-                            liftFast4 = li.InnerText;
+                            liftFast4 = int.Parse(li.InnerText);
                             break;
                         case "quad":
-                            liftQuad = li.InnerText;
+                            liftQuad = int.Parse(li.InnerText);
                             break;
                         case "triple":
-                            liftTriple = li.InnerText;
+                            liftTriple = int.Parse(li.InnerText);
                             break;
                         case "double":
-                            liftDouble = li.InnerText;
+                            liftDouble = int.Parse(li.InnerText);
                             break;
                         case "surface":
-                            liftSurface = li.InnerText;
+                            liftSurface = int.Parse(li.InnerText);
                             break;
                     }
                 }
 
                 //terrain
                 var uls = doc.DocumentNode.SelectNodes("//div[@id='resort_terrain']/ul");
-                var lis2 = uls[1].SelectNodes("./li");
-                var t = lis2[0].SelectNodes("./p");
-                runsLength = t[1].InnerText.Replace("\n", string.Empty).Replace(" ", string.Empty).Replace("KM", string.Empty).Trim();
-                var t2 = lis2[1].SelectNodes("./p");
-                terrainParks = t2[1].InnerText.Replace("\n", string.Empty).Replace(" ", string.Empty).Trim();
-                var t3 = lis2[2].SelectNodes("./p");
-                longestRun = t3[1].InnerText.Replace("\n", string.Empty).Replace(" ", string.Empty).Replace("KM", string.Empty).Trim();
-                var t4 = lis2[3].SelectNodes("./p");
-                skiableTerrain = t4[1].InnerText.Replace("\n", string.Empty).Replace(" ", string.Empty).Replace("ha", string.Empty).Trim();
 
+                var lis2 = uls[0].SelectNodes("./li");
+                foreach (var li in lis2)
+                {
+                    var ps = li.SelectNodes("./p");
+                    foreach (var p in ps)
+                    {
+                        switch (p.InnerText.ToLower().Trim())
+                        {
+                            case "runs":
+                                runsLength = int.Parse(p.NextSibling.InnerText.Replace("\n", string.Empty).Replace(" ", string.Empty).Replace("KM", string.Empty).Trim());
+                                break;
+                            case "terrain parks":
+                                terrainParks = int.Parse(p.NextSibling.InnerText.Replace("\n", string.Empty).Replace("\n", string.Empty).Replace(" ", string.Empty).Trim());
+                                break;
+                            case "longest run":
+                                longestRun = int.Parse(p.NextSibling.InnerText.Replace("\n", string.Empty).Replace(" ", string.Empty).Replace("KM", string.Empty).Trim());
+                                break;
+                            case "skiable terrain":
+                                skiableTerrain = int.Parse(p.NextSibling.InnerText.Replace("\n", string.Empty).Replace(" ", string.Empty).Replace("ha", string.Empty).Trim());
+                                break;
+                        }
+                    }
+                }
 
 
                 //important dates
@@ -168,8 +218,8 @@ namespace Sporthub.Scraper
                 //tourist office
                 var divs = doc.DocumentNode.SelectNodes("//div[@id='resort_contact']");
 
-                var ps = divs[0].SelectNodes("./ul/li/p");
-                foreach (var p in ps)
+                var ps3 = divs[0].SelectNodes("./ul/li/p");
+                foreach (var p in ps3)
                 {
                     if (p.SelectSingleNode("./a") != null)
                     {
@@ -182,9 +232,11 @@ namespace Sporthub.Scraper
                 }
 
                 //common misspellings
-                var ps2 = divs[1].SelectNodes("./ul/li/p");
-                akas = ps2[0].InnerText;
-
+                if (divs.Count > 1)
+                {
+                    var ps2 = divs[1].SelectNodes("./ul/li/p");
+                    akas = ps2[0].InnerText;
+                }
 
                 //Console.WriteLine(string.Format("Resort status - {0}", resortStatus));
                 //Console.WriteLine(string.Format("Season Start - {0}", seasonStart));
@@ -204,36 +256,42 @@ namespace Sporthub.Scraper
                 //string tmp2 = Console.ReadLine();
 
                 var resort = new Resort();
-                resort.TrailsGreen = int.Parse(trailsGreen);
-                resort.TrailsBlue = int.Parse(trailsBlue);
-                resort.TrailsRed = int.Parse(trailsRed);
-                resort.TrailsBlack = int.Parse(trailsBlack);
-                resort.LiftsTotal = int.Parse(liftsTotal);
-                resort.ElevationFrom = int.Parse(elevationFrom);
-                resort.ElevationTo = int.Parse(elevationTo);
-                resort.VerticalDrop = int.Parse(verticalDrop);
+                resort.Name = name;
+                resort.Slug = slugname;
+                resort.DummyCountryId = countryId;
+                resort.TrailsGreen = trailsGreen;
+                resort.TrailsBlue = trailsBlue;
+                resort.TrailsRed = trailsRed;
+                resort.TrailsBlack = trailsBlack;
+                resort.LiftsTotal = liftsTotal;
+                resort.ElevationFrom = elevationFrom;
+                resort.ElevationTo = elevationTo;
+                resort.VerticalDrop = verticalDrop;
                 resort.ResortStatus = resortStatus;
                 resort.SeasonStart = seasonStart;
                 resort.SeasonEnd = seasonEnd;
-                resort.LiftTram = int.Parse(liftTram);
-                resort.LiftFastEight = int.Parse(liftFast8);
-                resort.LiftFastSix = int.Parse(liftFast6);
-                resort.LiftFastQuad = int.Parse(liftFast4);
-                resort.LiftQuad = int.Parse(liftQuad);
-                resort.LiftDouble = int.Parse(liftDouble);
-                resort.LiftSurface = int.Parse(liftSurface);
-                resort.LiftTriple = int.Parse(liftTriple);
-                resort.RunsLength = int.Parse(runsLength);
-                resort.TerrainParks = int.Parse(terrainParks);
-                resort.LongestRun = int.Parse(longestRun);
-                resort.SkiableTerrain = int.Parse(skiableTerrain);
+                resort.LiftTram = liftTram;
+                resort.LiftFastEight = liftFast8;
+                resort.LiftFastSix = liftFast6;
+                resort.LiftFastQuad = liftFast4;
+                resort.LiftQuad = liftQuad;
+                resort.LiftDouble = liftDouble;
+                resort.LiftSurface = liftSurface;
+                resort.LiftTriple = liftTriple;
+                resort.RunsLength = runsLength;
+                resort.TerrainParks = terrainParks;
+                resort.LongestRun = longestRun;
+                resort.SkiableTerrain = skiableTerrain;
                 resort.TouristAddress = touristAddress;
                 resort.TouristEmail = touristEmail;
                 resort.Aka = akas;
+                Console.WriteLine("DONE");
 
                 resorts.Add(resort);
+                    //                resorts.Add(resort);
             }
 
+            return resorts;
         }
     }
 }
